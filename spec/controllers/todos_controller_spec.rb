@@ -89,4 +89,27 @@ describe TodosController do
       end
     end
   end
+
+  describe "DELETE #destroy" do
+    let(:todo) { create(:todo) }
+    context "when the todo exists" do
+      it "destroys the todo" do
+        todo
+        expect do
+          delete :destroy, id: todo
+        end.to change(Todo, :count).by -1
+      end
+      it "responds with a 'no content' header" do
+        delete :destroy, id: todo
+        expect(response.status).to eq 204
+      end
+    end
+
+    context "when the todo doesn't exist" do
+      it "responds with a not_found response" do
+        delete :destroy, id: 1000
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 end

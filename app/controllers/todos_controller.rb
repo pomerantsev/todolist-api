@@ -40,10 +40,13 @@ class TodosController < ApplicationController
   end
 
   def destroy
-    @todo = Todo.find(params[:id])
-    @todo.destroy
-
-    head :no_content
+    @todo = Todo.find_by(id: params[:id])
+    if @todo
+      @todo.destroy
+      head :no_content
+    else
+      head :not_found
+    end
   end
 
 private
