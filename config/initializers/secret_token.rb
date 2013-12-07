@@ -16,4 +16,4 @@
 # Using secret_token for rails3 compatibility. Change to secret_key_base
 # to avoid deprecation warning.
 # Can be safely removed in a rails3 api-only application.
-MyTodolist::Application.config.secret_token = 'fc865be20a5645bc0b33217bf257602e1ae221434879359121f47bc5b166df630b7a9e14c580715c8107cff455b7578f50cae17dd079df654aa83edb1216ff98'
+MyTodolist::Application.config.secret_key_base = 'fc865be20a5645bc0b33217bf257602e1ae221434879359121f47bc5b166df630b7a9e14c580715c8107cff455b7578f50cae17dd079df654aa83edb1216ff98'
