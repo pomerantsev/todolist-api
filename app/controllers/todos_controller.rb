@@ -2,7 +2,7 @@ class TodosController < ApplicationController
   # GET /todos
   # GET /todos.json
   def index
-    @todos = Todo.all
+    @todos = Todo.all.order(id: :asc)
 
     render json: @todos
   end
@@ -10,9 +10,13 @@ class TodosController < ApplicationController
   # GET /todos/1
   # GET /todos/1.json
   def show
-    @todo = Todo.find(params[:id])
+    @todo = Todo.find_by(id: params[:id])
 
-    render json: @todo
+    if @todo
+      render json: @todo
+    else
+      render json: nil, status: :not_found
+    end
   end
 
   # POST /todos
