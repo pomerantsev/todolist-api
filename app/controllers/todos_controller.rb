@@ -11,7 +11,7 @@ class TodosController < ApplicationController
     if @todo
       render json: @todo
     else
-      render json: nil, status: :not_found
+      head :not_found
     end
   end
 
