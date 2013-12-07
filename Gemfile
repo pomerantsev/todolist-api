@@ -8,9 +8,10 @@ gem 'rails-api'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 
-group :development, :test do
+group :test do
   gem 'rspec-rails', '2.14.0'
   gem 'factory_girl_rails', '4.3.0'
+  gem 'shoulda-matchers', '2.4.0'
 end
 
 # To use ActiveModel has_secure_password
