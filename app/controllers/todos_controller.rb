@@ -1,14 +1,10 @@
 class TodosController < ApplicationController
-  # GET /todos
-  # GET /todos.json
   def index
     @todos = Todo.all.order(id: :asc)
 
     render json: @todos
   end
 
-  # GET /todos/1
-  # GET /todos/1.json
   def show
     @todo = Todo.find_by(id: params[:id])
 
@@ -19,8 +15,6 @@ class TodosController < ApplicationController
     end
   end
 
-  # POST /todos
-  # POST /todos.json
   def create
     @todo = Todo.new(params[:todo])
 
@@ -31,8 +25,6 @@ class TodosController < ApplicationController
     end
   end
 
-  # PATCH/PUT /todos/1
-  # PATCH/PUT /todos/1.json
   def update
     @todo = Todo.find(params[:id])
 
@@ -43,8 +35,6 @@ class TodosController < ApplicationController
     end
   end
 
-  # DELETE /todos/1
-  # DELETE /todos/1.json
   def destroy
     @todo = Todo.find(params[:id])
     @todo.destroy
