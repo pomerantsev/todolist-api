@@ -26,12 +26,16 @@ class TodosController < ApplicationController
   end
 
   def update
-    @todo = Todo.find(params[:id])
+    @todo = Todo.find_by(id: params[:id])
 
-    if @todo.update(todo_params)
-      head :no_content
+    if @todo
+      if @todo.update(todo_params)
+        head :no_content
+      else
+        render json: @todo.errors, status: :unprocessable_entity
+      end
     else
-      render json: @todo.errors, status: :unprocessable_entity
+      head :not_found
     end
   end
 

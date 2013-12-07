@@ -56,4 +56,37 @@ describe TodosController do
       end
     end
   end
+
+  describe "PATCH #update" do
+    let(:todo) { create(:todo) }
+    let(:valid_params) { { title: "Do something else" } }
+    context "when the update is valid" do
+      before { patch :update, id: todo, todo: valid_params }
+      it "updates the todo" do
+        expect(todo.reload.title).to eq "Do something else"
+      end
+      it "responds with 'no_content' status" do
+        expect(response.status).to eq 204
+      end
+    end
+
+    context "when the update is invalid" do
+      let(:invalid_params) { { title: "" } }
+      let(:errors) { todo.update(invalid_params); todo.errors }
+      before { patch :update, id: todo, todo: invalid_params }
+      it "responds with 'unprocessable entity' status" do
+        expect(response.status).to eq 422
+      end
+      it "renders the errors for the todo" do
+        expect(response.body).to eq errors.to_json
+      end
+    end
+
+    context "when the todo doesn't exist" do
+      it "responds with a not_found response" do
+        patch :update, id: 1000, todo: valid_params
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 end
