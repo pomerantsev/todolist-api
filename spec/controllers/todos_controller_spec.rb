@@ -30,7 +30,7 @@ describe TodosController do
   end
 
   describe "POST #create" do
-    before { post :create, todo: todo_params }
+    before { post :create, todo_params }
     context "with a valid todo" do
       let(:todo_params) { attributes_for(:todo) }
       let(:todo) { Todo.last }
@@ -61,7 +61,7 @@ describe TodosController do
     let(:todo) { create(:todo) }
     let(:valid_params) { { title: "Do something else" } }
     context "when the update is valid" do
-      before { patch :update, id: todo, todo: valid_params }
+      before { patch :update, { id: todo }.merge(valid_params) }
       it "updates the todo" do
         expect(todo.reload.title).to eq "Do something else"
       end
@@ -73,7 +73,7 @@ describe TodosController do
     context "when the update is invalid" do
       let(:invalid_params) { { title: "" } }
       let(:errors) { todo.update(invalid_params); todo.errors }
-      before { patch :update, id: todo, todo: invalid_params }
+      before { patch :update, { id: todo }.merge(invalid_params) }
       it "responds with 'unprocessable entity' status" do
         expect(response.status).to eq 422
       end
@@ -84,7 +84,7 @@ describe TodosController do
 
     context "when the todo doesn't exist" do
       it "responds with a not_found response" do
-        patch :update, id: 1000, todo: valid_params
+        patch :update, { id: 1000 }.merge(valid_params)
         expect(response.status).to eq(404)
       end
     end
