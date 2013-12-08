@@ -1,4 +1,5 @@
 MyTodolist::Application.routes.draw do
+  match "*all", to: "application#cors_preflight_check", via: [:options]
   resources :todos, except: [:new, :edit]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
