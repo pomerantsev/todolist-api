@@ -4,6 +4,7 @@ class TodosController < ApplicationController
   load_and_authorize_resource only: [:index]
 
   def index
+    @todos = @todos.order(id: :asc)
     render json: @todos
   end
 
