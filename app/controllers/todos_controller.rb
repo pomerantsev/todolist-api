@@ -1,4 +1,5 @@
 class TodosController < ApplicationController
+  before_action :authenticate_user_from_token!
   def index
     @todos = Todo.all.order(id: :asc)
 

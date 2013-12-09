@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  include ActionController::MimeResponds
+
   # CORS actions: http://stackoverflow.com/questions/17858178/allow-anything-through-cors-policy
   after_action :cors_set_access_control_headers
 
@@ -17,6 +19,8 @@ protected
     if user && Devise.secure_compare(user.authentication_token, params[:user_token])
       sign_in user, store: false
     end
+
+    head :unauthorized unless user_signed_in?
   end
 
 private
