@@ -1,8 +1,9 @@
 class TodosController < ApplicationController
   before_action :authenticate_user_from_token!
-  def index
-    @todos = Todo.all.order(id: :asc)
 
+  load_and_authorize_resource only: [:index]
+
+  def index
     render json: @todos
   end
 
@@ -10,6 +11,7 @@ class TodosController < ApplicationController
     @todo = Todo.find_by(id: params[:id])
 
     if @todo
+      authorize! :show, @todo
       render json: @todo
     else
       head :not_found
@@ -17,7 +19,7 @@ class TodosController < ApplicationController
   end
 
   def create
-    @todo = Todo.new(todo_params)
+    @todo = Todo.new(todo_params.merge(user_id: current_user.id))
 
     if @todo.save
       render json: @todo, status: :created, location: @todo
@@ -30,6 +32,7 @@ class TodosController < ApplicationController
     @todo = Todo.find_by(id: params[:id])
 
     if @todo
+      authorize! :update, @todo
       if @todo.update(todo_params)
         head :no_content
       else
@@ -43,6 +46,7 @@ class TodosController < ApplicationController
   def destroy
     @todo = Todo.find_by(id: params[:id])
     if @todo
+      authorize! :destroy, @todo
       @todo.destroy
       head :no_content
     else

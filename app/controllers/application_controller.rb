@@ -1,8 +1,14 @@
 class ApplicationController < ActionController::API
   include ActionController::MimeResponds
+  include CanCan::ControllerAdditions
 
   # CORS actions: http://stackoverflow.com/questions/17858178/allow-anything-through-cors-policy
   after_action :cors_set_access_control_headers
+
+  rescue_from CanCan::AccessDenied do |exception|
+    head :forbidden
+    set_headers
+  end
 
   def cors_preflight_check
     set_headers
