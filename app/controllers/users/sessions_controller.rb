@@ -16,7 +16,7 @@ class Users::SessionsController < Devise::SessionsController
   def failure
     # Not sure if this line is necessary
     # warden.custom_failure!
-    render status: :unauthorized,
+    render status: :ok,
            json: { info: "Login failed" }
   end
 end

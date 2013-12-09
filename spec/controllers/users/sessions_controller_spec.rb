@@ -21,8 +21,8 @@ describe Users::SessionsController do
 
     context "with invalid params" do
       shared_examples "failed login" do
-        it "responds with 'unauthorized' status" do
-          expect(response.status).to eq 401
+        it "responds with 'ok' status" do
+          expect(response.status).to eq 200
         end
         it "responds with a 'Login failed' message" do
           expect(JSON.parse(response.body)['info']).to eq "Login failed"
