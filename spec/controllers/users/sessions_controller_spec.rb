@@ -12,10 +12,11 @@ describe Users::SessionsController do
         action
         expect(response.status).to eq 200
       end
-      it "responds with the user's authentication token" do
+      it "responds with the user's authentication token and success == true" do
         action
         expect(JSON.parse(response.body)['auth_token'])
           .to eq User.last.authentication_token
+        expect(JSON.parse(response.body)['success']).to eq true
       end
     end
 
@@ -24,7 +25,8 @@ describe Users::SessionsController do
         it "responds with 'ok' status" do
           expect(response.status).to eq 200
         end
-        it "responds with a 'Login failed' message" do
+        it "responds with a 'Login failed' message and success == false" do
+          expect(JSON.parse(response.body)['success']).to eq false
           expect(JSON.parse(response.body)['info']).to eq "Login failed"
         end
       end

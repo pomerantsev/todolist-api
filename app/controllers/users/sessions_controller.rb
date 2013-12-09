@@ -8,6 +8,7 @@ class Users::SessionsController < Devise::SessionsController
 
     render status: :ok,
            json: {
+             success: true,
              user: resource,
              auth_token: current_user.authentication_token
            }
@@ -17,6 +18,9 @@ class Users::SessionsController < Devise::SessionsController
     # Not sure if this line is necessary
     # warden.custom_failure!
     render status: :ok,
-           json: { info: "Login failed" }
+           json: {
+             success: false,
+             info: "Login failed"
+           }
   end
 end
