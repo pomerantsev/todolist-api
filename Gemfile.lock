@@ -29,6 +29,7 @@ GEM
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
     builder (3.1.4)
+    cancan (1.6.10)
     devise (3.2.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -117,6 +118,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cancan (= 1.6.10)
   devise (= 3.2.2)
   factory_girl_rails (= 4.3.0)
   pg (= 0.17.0)
