@@ -20,7 +20,10 @@ protected
       sign_in user, store: false
     end
 
-    head :unauthorized unless user_signed_in?
+    unless user_signed_in?
+      head :unauthorized
+      set_headers
+    end
   end
 
 private
