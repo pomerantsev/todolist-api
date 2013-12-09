@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
 
   before_save :ensure_authentication_token
 
+  # From here: https://gist.github.com/josevalim/fb706b1e933ef01e4fb6
   def ensure_authentication_token
     if authentication_token.blank?
       self.authentication_token = generate_authentication_token
