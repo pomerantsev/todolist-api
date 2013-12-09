@@ -4,4 +4,6 @@ class Todo < ActiveRecord::Base
   validates :completed, inclusion: { in: [true, false] }
   validates :priority, presence: true,
                        inclusion: { in: 1..3 }
+
+  belongs_to :user
 end
