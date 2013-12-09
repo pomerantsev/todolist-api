@@ -6,8 +6,8 @@ describe Users::SessionsController do
 
     context "with valid params" do
       let!(:user) { create :user, password: "12345678" }
-      let(:user_params) { { email: user.email, password: "12345678" } }
-      let(:action) { post :create, user: user_params }
+      let(:action) { post :create, user: { email: user.email,
+                                           password: "12345678" } }
       it "responds with 'ok' status" do
         action
         expect(response.status).to eq 200
@@ -20,12 +20,26 @@ describe Users::SessionsController do
     end
 
     context "with invalid params" do
-      before { post :create, user: {} }
-      it "responds with 'unauthorized' status" do
-        expect(response.status).to eq 401
+      shared_examples "failed login" do
+        it "responds with 'unauthorized' status" do
+          expect(response.status).to eq 401
+        end
+        it "responds with a 'Login failed' message" do
+          expect(JSON.parse(response.body)['info']).to eq "Login failed"
+        end
       end
-      it "responds with a 'Login failed' message" do
-        expect(JSON.parse(response.body)['info']).to eq "Login failed"
+
+      context "when there is no such user in the database" do
+        before { post :create, user: { email: "some_email@example.com",
+                                       password: "some_password" } }
+        it_behaves_like "failed login"
+      end
+
+      context "when the password is incorrect" do
+        let(:user) { create :user, password: "some_password" }
+        before { post :create, user: { email: user.email,
+                                       password: "incorrect_password" } }
+        it_behaves_like "failed login"
       end
     end
 
