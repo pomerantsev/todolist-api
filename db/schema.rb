@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131207084246) do
+ActiveRecord::Schema.define(version: 20131209072607) do
 
   create_table "todos", force: true do |t|
     t.string   "title"
@@ -21,5 +21,16 @@ ActiveRecord::Schema.define(version: 20131207084246) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "users", force: true do |t|
+    t.string   "email",                default: "", null: false
+    t.string   "encrypted_password",   default: "", null: false
+    t.string   "authentication_token", default: "", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
 
 end
