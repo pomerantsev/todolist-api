@@ -1,34 +1,29 @@
 require 'spec_helper'
 
 describe TodosController do
-  context "when not signed in" do
-    describe "GET #index" do
-      let!(:todo) { create :todo }
-      it "responds with unauthorized status" do
-        get :index
-        expect(response.status).to eq 401
-      end
-
-      it "responds with an empty body" do
-        get :index
-        expect(response.body).to be_blank
-      end
+  shared_examples "not signed in" do
+    it "responds with unauthorized status" do
+      expect(response.status).to eq 401
+    end
+    it "responds with an empty body" do
+      expect(response.body).to be_blank
     end
   end
 
-  context "when signed in" do
-    shared_examples "forbidden" do
-      it "responds with a 'forbidden' response" do
-        expect(response.status).to eq 403
-      end
+  shared_examples "forbidden" do
+    it "responds with a 'forbidden' response" do
+      expect(response.status).to eq 403
     end
+  end
 
-    let(:user) { create :user }
-    before { sign_in user }
-    describe "GET #index" do
-      let!(:todo1) { create :todo, user: user }
-      let!(:todo2) { create :todo, user: user }
-      let!(:todo3) { create :todo, user: create(:user) }
+  let(:user) { create :user }
+
+  describe "GET #index" do
+    let!(:todo1) { create :todo, user: user }
+    let!(:todo2) { create :todo, user: user }
+    let!(:todo3) { create :todo, user: create(:user) }
+    context "when signed in" do
+      before { sign_in user }
       it "responds with the user's todos index" do
         get :index
         expect(response.status).to eq(200)
@@ -36,8 +31,16 @@ describe TodosController do
       end
     end
 
-    describe "GET #show" do
-      let(:todo) { create :todo, user: user }
+    context "when not signed in" do
+      before { get :index }
+      it_behaves_like "not signed in"
+    end
+  end
+
+  describe "GET #show" do
+    let(:todo) { create :todo, user: user }
+    context "when signed in" do
+      before { sign_in user }
       context "when the todo exists" do
         it "responds with the requested todo" do
           get :show, id: todo
@@ -60,8 +63,18 @@ describe TodosController do
       end
     end
 
-    describe "POST #create" do
-      before { post :create, todo_params }
+    context "when not signed in" do
+      before { get :show, id: todo }
+      it_behaves_like "not signed in"
+    end
+  end
+
+  describe "POST #create" do
+    context "when signed in" do
+      before do
+        sign_in user
+        post :create, todo_params
+      end
       context "with a valid todo" do
         let(:todo_params) { attributes_for(:todo) }
         let(:todo) { Todo.last }
@@ -88,9 +101,17 @@ describe TodosController do
       end
     end
 
-    describe "PATCH #update" do
-      let(:todo) { create :todo, user: user }
-      let(:valid_params) { { title: "Do something else" } }
+    context "when not signed in" do
+      before { post :create, attributes_for(:todo) }
+      it_behaves_like "not signed in"
+    end
+  end
+
+  describe "PATCH #update" do
+    let(:todo) { create :todo, user: user }
+    let(:valid_params) { { title: "Do something else" } }
+    context "when signed in" do
+      before { sign_in user }
       context "when the update is valid" do
         before { patch :update, { id: todo }.merge(valid_params) }
         it "updates the todo" do
@@ -127,8 +148,16 @@ describe TodosController do
       end
     end
 
-    describe "DELETE #destroy" do
-      let!(:todo) { create :todo, user: user }
+    context "when not signed in" do
+      before { patch :update, { id: todo }.merge(valid_params) }
+      it_behaves_like "not signed in"
+    end
+  end
+
+  describe "DELETE #destroy" do
+    let!(:todo) { create :todo, user: user }
+    context "when signed in" do
+      before { sign_in user }
       context "when the todo exists" do
         it "destroys the todo" do
           expect do
@@ -153,6 +182,11 @@ describe TodosController do
         before { delete :destroy, id: another_todo }
         it_behaves_like "forbidden"
       end
+    end
+
+    context "when not signed in" do
+      before { delete :destroy, id: todo }
+      it_behaves_like "not signed in"
     end
   end
 end
