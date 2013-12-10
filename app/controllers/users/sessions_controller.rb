@@ -15,8 +15,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def failure
-    # Not sure if this line is necessary
-    # warden.custom_failure!
     render status: :ok,
            json: {
              success: false,
