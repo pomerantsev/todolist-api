@@ -6,14 +6,13 @@ describe Users::SessionsController do
 
     context "with valid params" do
       let!(:user) { create :user, password: "12345678" }
-      let(:action) { post :create, user: { email: user.email,
-                                           password: "12345678" } }
+      before do
+        post :create, user: { email: user.email, password: "12345678" }
+      end
       it "responds with 'ok' status" do
-        action
         expect(response.status).to eq 200
       end
       it "responds with the user's authentication token and success == true" do
-        action
         expect(JSON.parse(response.body)['auth_token'])
           .to eq User.last.authentication_token
         expect(JSON.parse(response.body)['success']).to eq true
